@@ -1,0 +1,22 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+const ll INF = 1e18;
+const int MAX = 1e6 + 10; 
+ll sum[MAX];
+int n;
+ll minn = INF;
+int main()
+{
+	cin>>n;
+	for(int i = 1;i <= n;i++)
+	{
+		ll x;cin>>x;
+		sum[i] = sum[i - 1] + x;
+		minn = min(minn ,sum[i]);
+	}
+//	cout<<minn<<endl;
+	if(minn > 0)cout<<sum[n];
+	else cout<<sum[n] - minn<<endl;
+	return 0;
+}
