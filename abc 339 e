@@ -1,0 +1,43 @@
+#include<bits/stdc++.h>
+using namespace std;
+int n,d;
+const int MAX = 1e6 + 10;
+int maxx[MAX<<2],dp[MAX];
+int a[MAX];
+int ask(int k,int l,int r,int x,int y)
+{
+	if(x <= l && r <= y)return maxx[k];
+	int mid = l + r >> 1;
+	int res = 0;
+	if(x <= mid)res = max(res,ask(k<<1,l,mid,x,y));
+	if(y > mid)res = max(res,ask(k<<1|1,mid + 1,r,x,y));
+	return res;
+}
+void modify(int k,int l,int r,int x,int w)
+{
+	if(l == r)
+	{
+		maxx[k] = max(maxx[k],w);
+		return;
+	}
+	int mid = l + r >> 1;
+	if(x <= mid)modify(k << 1,l,mid,x,w);
+	else modify(k<<1|1,mid + 1,r,x,w);
+	maxx[k] = max(maxx[k<<1],maxx[k<<1|1]);
+}
+int main()
+{
+	cin>>n>>d;
+	for(int i = 1;i <= n;i++)
+	{
+		cin>>a[i];
+	}
+	int ans = 0;
+	for(int i = 1;i <= n;i++)
+	{
+		dp[i] = max(dp[i],ask(1,1,MAX,max(a[i] - d,1),min(a[i] + d,MAX)) + 1);
+		modify(1,1,MAX,a[i],dp[i]);
+		ans = max(ans,dp[i]);
+	}
+	cout<<ans<<endl;
+}
