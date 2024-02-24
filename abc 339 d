@@ -1,0 +1,90 @@
+#include<bits/stdc++.h>
+using namespace std;
+int n;
+#define ll long long 
+const ll INF = 1e18;
+char a[105][105];
+int x_1,y_1,x_2,y_2;
+int dx[4] = {1,0,-1,0};
+int dy[4] = {0,1,0,-1};
+bool vis1[105][105],vis2[105][105];
+bool vis[65][65][65][65];
+int w[105][105];
+struct node
+{
+	int x_1,y_1;
+	int x_2,y_2;
+	int step;
+};
+queue<node>q;
+int main()
+{
+	cin>>n;
+	int tot = 0;
+	for(int i = 1;i <= n;i++)
+	for(int j = 1;j <= n;j++)
+	{
+		cin>>a[i][j];
+		if(a[i][j] == '#')
+		vis1[i][j] = 1,vis2[i][j] = 1;	
+		if(a[i][j] == 'P')
+		{
+			if(tot == 0)x_1 = i,y_1 = j;
+			else x_2 = i,y_2 = j;
+			tot++;
+		}
+	}
+	node xxx;
+	xxx.x_1 = x_1;
+	xxx.x_2 = x_2;
+	xxx.y_1 = y_1;
+	xxx.y_2 = y_2;
+	xxx.step = 0;
+	q.push(xxx);
+	long long ans = -1;
+	while(!q.empty())
+	{
+		node np = q.front();
+		q.pop(); 
+		int nx_1 = np.x_1;
+		int nx_2 = np.x_2;
+		int ny_1 = np.y_1;
+		int ny_2 = np.y_2;
+		int nstep = np.step;
+		if(nx_1 == nx_2 && ny_1 == ny_2)
+		{
+			ans = nstep;
+			break;
+		}
+		vis[nx_1][ny_1][nx_2][ny_2] = 1;
+		for(int i = 0;i < 4;i++)
+		{
+			int fx_1 = nx_1 + dx[i];
+			int fx_2 = nx_2 + dx[i];
+			int fy_1 = ny_1 + dy[i];
+			int fy_2 = ny_2 + dy[i];
+			int flag = 0;
+			if(fx_1 > n || fx_1 < 1 || fy_1 > n || fy_1 < 1 || vis1[fx_1][fy_1])fx_1 = nx_1,fy_1 = ny_1,flag++;
+			if(fx_2 > n || fx_2 < 1 || fy_2 > n || fy_2 < 1 || vis2[fx_2][fy_2])fx_2 = nx_2,fy_2 = ny_2,flag++;
+			if(fx_1 == fx_2 && fy_1 == fy_2)
+			{
+				ans = nstep + 1;
+				cout<<ans<<endl;
+				return 0;
+			}
+			if(flag == 2)continue;
+			if(vis[fx_1][fy_1][fx_2][fy_2])continue;
+			vis[fx_1][fy_1][fx_2][fy_2] = 1;
+			node fp;
+			fp.step = nstep + 1;
+			fp.x_1 = fx_1;
+			fp.x_2 = fx_2;
+			fp.y_1 = fy_1;
+			fp.y_2 = fy_2;
+//			cout<<"step = "<<fp.step<<" nx_1 = "<<fp.x_1<<" ny_1 = "<<fp.y_1<<" nx_2 = "<<fp.x_2<<" ny_2 = "<<fp.y_2<<endl;
+			q.push(fp);
+		}
+	}
+	cout<<ans<<endl;
+	return 0;
+}
