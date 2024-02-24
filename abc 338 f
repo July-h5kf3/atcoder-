@@ -1,0 +1,48 @@
+#include<bits/stdc++.h>
+using namespace std;
+const long long INF = 1145141919810;
+long long dis[55][55],dp[1<<21][30];
+int n,m;
+int main()
+{
+	cin>>n>>m;
+	memset(dis,0x3f3f,sizeof(dis));
+	for(int i = 1;i <= n;i++)dis[i][i] = 0;
+	for(int i = 1;i <= m;i++)
+	{
+		int x,y;
+		long long w;
+		cin>>x>>y>>w;
+		dis[x][y] = w;
+	}
+	for(int k = 1;k <= n;k++)
+	{
+		for(int i = 1;i <= n;i++)
+		{ 
+			for(int j = 1;j <= n;j++)
+			{
+				dis[i][j] = min(dis[i][j],dis[i][k] + dis[k][j]);
+			}
+		}
+	}
+	memset(dp,0x3f3f,sizeof(dp));
+	for(int i = 1;i <= n;i++)dp[1<<(i - 1)][i] = 0;
+	for(int i = 0;i <= (1<<n) - 1;i++)
+	{
+		for(int j = 1;j <= n;j++)
+		{
+			if(!((1<<(j-1))&i))continue;
+			for(int k = 1;k <= n;k++)
+			{
+				if(i&(1<<(k-1)))continue;
+//				if(dis[j][k] == INF)continue;
+				dp[i|1<<(k-1)][k] = min(dp[i|(1<<(k-1))][k],dp[i][j]+dis[j][k]);
+//				cout<<"i = "<<i<<" j = "<<j<<" k = "<<k<<" dp = "<<dp[i|1<<(k-1)][k]<<endl;
+			}
+		}
+	}
+	long long ans = INF;
+	for(int i = 1;i <= n;i++)ans = min(dp[(1<<n) - 1][i],ans);
+	if(ans == INF)cout<<"No"<<endl;
+	else cout<<ans<<endl;
+}
