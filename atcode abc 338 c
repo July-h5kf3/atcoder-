@@ -1,0 +1,41 @@
+#include<bits/stdc++.h>
+using namespace std;
+int n;
+const int MAX = 1e6 + 10;
+int q[MAX];
+int a[MAX],b[MAX];
+int main()
+{
+	cin>>n;
+	int maxa = 0x3f3f3f;
+	int maxb = 0x3f3f3f;
+	int maxx = 0;
+	for(int i = 1;i <= n;i++)cin>>q[i];
+	for(int i = 1;i <= n;i++)
+	{
+		cin>>a[i];
+		if(a[i] == 0)continue;
+		int t = q[i] / a[i];	
+		maxa = min(maxa,t);
+	}
+	for(int i = 1;i <= n;i++)
+	{
+		cin>>b[i];
+		if(b[i] == 0)continue;
+		int t = q[i] / b[i];
+		maxb = min(maxb,t);
+	}
+	maxx = maxa;
+//	cout<<maxa<<" "<<maxb<<endl;
+	for(int i = maxa;i >= 0;i--)
+	{
+		int minn = 0x3f3f3f;
+		for(int j = 1;j <= n;j++)
+		{
+			if(b[j] == 0)continue;
+			minn = min((q[j] - i * a[j]) / b[j],minn);
+		}
+		maxx = max(i + minn,maxx);
+	}
+	cout<<maxx<<endl;
+}
