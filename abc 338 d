@@ -1,0 +1,31 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int MAX  = 1e6 + 10;
+const long long INF = 1e18;
+int s[MAX];
+int n,m;
+long long c[MAX];
+void add(int l,int r,int w)
+{
+	c[l] += w;
+	c[r + 1] -= w;
+}
+int main()
+{
+	cin>>n>>m;
+	for(int i = 1;i <= m;i++)cin>>s[i];
+	for(int i = 2;i <= m;i++)
+	{
+		int x = s[i - 1];
+		int y = s[i];
+		if(x > y)swap(x,y);
+		int d = y - x;
+		if(x - 1 >= 1)add(1,x - 1,d);
+		add(x,y - 1,n - d);
+		add(y,n,d);
+	}
+	long long minn = INF;
+	long long ans = 0;
+	for(int i = 1;i <= n;i++)ans += c[i],minn = min(minn,ans);
+	cout<<minn<<endl;
+}
